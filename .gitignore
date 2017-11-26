@@ -1,4 +1,7 @@
 .DS_Store
 /.build
+/Build
 /Packages
 /*.xcodeproj
+/*.xcworkspace
+/Pailead Analysis
