@@ -116,7 +116,12 @@ public class VBox : Hashable {
         self.contents = contents
     }
     
+    public var canSplit : Bool {
+        return redLength >= 1
+    }
+    
     public func split() -> (VBox, VBox) {
+        
         // How the fuck do I do this. A partition?
         let dimension = longestDimension
         let splitPoint = median(along: dimension)
