@@ -9,6 +9,32 @@ import XCTest
 @testable import Pailead
 
 class PriorityQueueTests: XCTestCase {
+    
+    func testInitialization() {
+        let unsortedItems = ["A", "ABCD", "AB", "ABCDE", "ABC"]
+        let pqLarge = PriorityQueue(unsortedItems, compareUsingLargestValue: \String.count)
+        let pqSmall = PriorityQueue(unsortedItems, compareUsingSmallestValue: \String.count)
+        
+        let pqLargeSuperLong = PriorityQueue(unsortedItems, comparator: { first, second in
+            return first.count > second.count
+        })
+        let pqSmallSuperLong = PriorityQueue(unsortedItems, comparator: { first, second in
+            return first.count < second.count
+        })
+        
+        let pqLargeLong = PriorityQueue(unsortedItems, compareUsingLargestValue: { $0.count })
+        let pqSmallLong = PriorityQueue(unsortedItems, compareUsingSmallestValue: { $0.count })
+        
+        // They do the opposite things
+        XCTAssertEqual(pqSmall.feed(), pqLarge.feed().reversed())
+        XCTAssertEqual(pqSmallLong.feed(), pqLargeLong.feed().reversed())
+        XCTAssertEqual(pqSmallSuperLong.feed(), pqLargeSuperLong.feed().reversed())
+        
+        // They equal eachother
+        XCTAssertEqual(pqSmall.feed(), pqSmallLong.feed())
+        XCTAssertEqual(pqSmallLong.feed(), pqSmallSuperLong.feed())
+    }
+    
     func testItemsAreSortedWhenInitialized() {
         let unsortedItems = ["A", "ABCD", "AB", "ABCDE", "ABC"]
         
