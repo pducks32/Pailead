@@ -70,4 +70,17 @@ class PriorityQueueTests: XCTestCase {
         XCTAssertEqual(pqSmall.peek(), "AB")
     }
     
+    func testElementsIsEmpty() {
+        let unsortedItems = ["A"]
+        
+        let pqSmall = PriorityQueue(unsortedItems, compareUsingSmallestValue: \String.count)
+        XCTAssertFalse(pqSmall.isEmpty)
+        XCTAssertEqual(pqSmall.count, 1)
+        XCTAssertEqual(pqSmall.poll(), "A")
+        
+        // When finally empty
+        XCTAssertTrue(pqSmall.isEmpty)
+        XCTAssertEqual(pqSmall.count, 0)
+        XCTAssertNil(pqSmall.poll())
+    }
 }
