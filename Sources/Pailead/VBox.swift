@@ -138,17 +138,6 @@ public class VBox : Hashable {
         return (VBox(pixels: smaller), VBox(pixels: larger))
     }
     
-    private func median_dimensionOrder(for dimension : Axis) -> (Axis, Axis, Axis) {
-        switch dimension {
-        case .red:
-            return (.red, .green, .blue)
-        case .green:
-            return (.green, .blue, .red)
-        case .blue:
-            return (.blue, .red, .green)
-        }
-    }
-    
     public func median(along dimension : Axis) -> Pixel.SubValue {
         var totalSum = 0
         //var slicesCumSum : [Int] = []
