@@ -142,53 +142,29 @@ public class VBox : Hashable {
         var totalSum = 0
         //var slicesCumSum : [Int] = []
         
-        
-        let (firstDimension, secondDimension, thirdDimension) = median_dimensionOrder(for: dimension)
-        
-        let lengthOfLongest = length(along: firstDimension)
-        //slicesCumSum.reserveCapacity(lengthOfLongest)
-        
-        //var cachedPixel : [VBox.Axis: Pixel.SubValue] = [firstDimension: 0, secondDimension: 0, thirdDimension: 0]
-        /// - todo: Maybe just use a hash sort
+        let lengthOfLongest = length(along: dimension)
         
         var slicesSums : [Int] = [Int](repeating: 0, count: lengthOfLongest + 1)
-        let minDimension = inital(in: firstDimension)
+        let minDimension = inital(in: dimension)
         contents.forEach { (swatch) in
             let (pixel, population) = swatch
-            let redIndex = pixel[firstDimension] - minDimension
+            let redIndex = pixel[dimension] - minDimension
             slicesSums[Int(redIndex)] += population
-            //for thingIndex in slicesSums[Int(redIndex)...].indices {
-            //    slicesSums[thingIndex] += population
-            //}
         }
+        
         var thingToAddToNext = 0
         for (index, slicePopulation) in slicesSums.enumerated() {
             thingToAddToNext += slicePopulation
             slicesSums[index] = thingToAddToNext
         }
         totalSum = slicesSums.last!
-//        print(inital(in: firstDimension)...final(in: firstDimension))
-//        print(lengthOfLongest)
-//        for firstIndex in inital(in: firstDimension)...final(in: firstDimension) {
-//            var sliceSum = 0
-//            cachedPixel[firstDimension] = firstIndex
-//            for secondIndex in inital(in: secondDimension)...final(in: secondDimension) {
-//                cachedPixel[secondDimension] = secondIndex
-//                for thirdIndex in inital(in: thirdDimension)...final(in: thirdDimension) {
-//                    cachedPixel[thirdDimension] = thirdIndex
-//                    sliceSum += contents[Pixel(cachedPixel)] ?? 0
-//                }
-//            }
-//            totalSum += sliceSum
-//            slicesCumSum.append(totalSum)
-//        }
-//        assert(slicesCumSum[4] == slicesSums[4])
+        
         let halfTotal = totalSum / 2
         
         
         // Possibility that first slice contains the majority of values
         if slicesSums[0] >= halfTotal {
-            return inital(in: firstDimension) + 1
+            return inital(in: dimension) + 1
         }
         
         for index in slicesSums.indices.dropLast() {
@@ -196,7 +172,7 @@ public class VBox : Hashable {
             let next = slicesSums[index+1]
             
             if current <= halfTotal && next >= halfTotal {
-                return inital(in: firstDimension) + index + 1
+                return inital(in: dimension) + index + 1
             }
         }
         
@@ -251,14 +227,6 @@ public class VBox : Hashable {
             blueSum += pixel.blue * swatch.value
         }
         
-//        for pixel in contents.keys {
-//            let population = contents[pixel]!
-//            totalPopulation += population
-//            redSum   += pixel.red * population
-//            greenSum += pixel.green * population
-//            blueSum  += pixel.blue * population
-//        }
-        
         let finalRed = round(Double(redSum) / Double(totalPopulation))
         let finalGreen = round(Double(greenSum) / Double(totalPopulation))
         let finalBlue = round(Double(blueSum) / Double(totalPopulation))
@@ -285,8 +253,8 @@ public class VBox : Hashable {
     }
     
     public func midpoint(in dimension : Axis) -> Pixel.SubValue {
-        let (upper, lower) = self.extremities(in: dimension)
-        return (upper - lower) / 2
+        let (lower, upper) = self.extremities(in: dimension)
+        return lower + (upper - lower) / 2
     }
     
     public func contains(_ pixel : Pixel) -> Bool {
