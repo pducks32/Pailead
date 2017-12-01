@@ -8,6 +8,14 @@
 import XCTest
 @testable import Pailead
 
+class VBoxAxisTests : XCTestCase {
+    func testDescriptions() {
+        XCTAssertEqual(VBox.Axis.red.description, "red")
+        XCTAssertEqual(VBox.Axis.green.description, "green")
+        XCTAssertEqual(VBox.Axis.blue.description, "blue")
+    }
+}
+
 class VBoxTests: XCTestCase {
     
     // MARK: Build from Contents Tests
@@ -31,6 +39,18 @@ class VBoxTests: XCTestCase {
         ]
         
         subject = VBox(pixels: subjectInitialContents)
+    }
+    
+    func testInitWithDictionary() {
+        let theInitialContents : [Pixel: Int] = [
+            shouldAppearOnce: 1,
+            shouldAppearThrice: 3,
+            shouldAppearTwice: 2,
+            shouldAppearOnceToo: 1
+        ]
+        let dictionarySubject = VBox(pixels: theInitialContents)
+        
+        XCTAssertEqual(subject, dictionarySubject)
     }
     
     // Min Pixel
@@ -105,8 +125,8 @@ class VBoxTests: XCTestCase {
         XCTAssertTrue(subject.contains(shouldAppearOnce))
         
         
-        let greenIsOutOfRange = Pixel(red: 123, green: 102, blue: 101)
-        XCTAssertFalse(subject.contains(greenIsOutOfRange))
+        let doesNotExistInBox = Pixel(red: 123, green: 102, blue: 101)
+        XCTAssertFalse(subject.contains(doesNotExistInBox))
     }
     
     // Covers
@@ -154,7 +174,27 @@ class VBoxTests: XCTestCase {
         XCTAssertEqual(subject.average(), averagePixel)
     }
     
+    func testHashValueIsUnique() {
+        let alphaPixel = Pixel(red: 1, green: 2, blue: 3)
+        let betaPixel = Pixel(red: 4, green: 5, blue: 6)
+        let first = VBox(min: alphaPixel, max: betaPixel, contents: [:])
+        let second = VBox(min: betaPixel, max: alphaPixel, contents: [:])
+        XCTAssertEqual(first, second)
+    }
+    
     // Midpoint
+    func testMidpoint() {
+        let minPixel = Pixel(red: 5, green: 7, blue: 0)
+        let maxPixel = Pixel(red: 15, green: 28, blue: 55)
+        let vbox = VBox(min: minPixel, max: maxPixel, contents: [:])
+        let expectedMidpoint = Pixel(red: 10, green: 17, blue: 27)
+        
+        XCTAssertEqual(vbox.midpoint(in: .red), expectedMidpoint.red)
+        XCTAssertEqual(vbox.midpoint(in: .green), expectedMidpoint.green)
+        XCTAssertEqual(vbox.midpoint(in: .blue), expectedMidpoint.blue)
+        
+    }
+    
     // Average Point
     // Median Along Dimensions
     //   First Slice has everything
