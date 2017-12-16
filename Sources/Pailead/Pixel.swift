@@ -7,15 +7,21 @@
 
 import Foundation
 
+/// Represents a 24-bit color in RGB space.
 public struct Pixel : RawRepresentable, Hashable, Equatable {
     public typealias RawValue = Int
     public typealias SubValue = Int
     
+    /// Bits used to encode the subvalue in the rawvalue
     public static let sigfigs : SubValue = 8
+    /// Max number allowed for the given sigfigs
     public static let digitFullOfOnesUpToSigfigs = SubValue(pow(2, Double(Pixel.sigfigs))) - 1
     
+    /// Red channel value
     public let red : SubValue
+    /// Green channel value
     public let green : SubValue
+    /// Blue channel value
     public let blue : SubValue
     
     public init(red : SubValue, green : SubValue, blue : SubValue) {
@@ -26,6 +32,7 @@ public struct Pixel : RawRepresentable, Hashable, Equatable {
         self.hashValue = self.rawValue
     }
     // 28740809174
+    
     public init?(rawValue: RawValue) {
         red   = Pixel.pushAndPullValue(base: rawValue, index: 2)
         green = Pixel.pushAndPullValue(base: rawValue, index: 1)
@@ -34,6 +41,9 @@ public struct Pixel : RawRepresentable, Hashable, Equatable {
         self.hashValue = self.rawValue
     }
     
+    
+    /// This is a private version used internally for performance gains.
+    /// - Note: DO NOT USE
     public init(red : SubValue, green : SubValue, blue : SubValue, rawValue : RawValue) {
         self.red = red
         self.green = green
