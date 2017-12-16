@@ -17,6 +17,7 @@ public struct Pixel : RawRepresentable, Hashable, Equatable {
     /// Max number allowed for the given sigfigs
     public static let digitFullOfOnesUpToSigfigs = SubValue(pow(2, Double(Pixel.sigfigs))) - 1
     
+    // - MARK: Channels
     /// Red channel value
     public let red : SubValue
     /// Green channel value
@@ -24,6 +25,14 @@ public struct Pixel : RawRepresentable, Hashable, Equatable {
     /// Blue channel value
     public let blue : SubValue
     
+    // - MARK: Computed
+    /// The 24-bit encoded value representing all 3 channels.
+    public let rawValue : RawValue
+    /// Normally set to `rawValue`
+    public let hashValue : Int
+    
+    // - MARK: Initializers
+    /// Initialize a new pixel with the given `red`, `blue`, and `green` channels.
     public init(red : SubValue, green : SubValue, blue : SubValue) {
         self.red = red
         self.green = green
@@ -33,6 +42,7 @@ public struct Pixel : RawRepresentable, Hashable, Equatable {
     }
     // 28740809174
     
+    /// Unmarshal a `rawValue` into it's 3 encoded channels
     public init?(rawValue: RawValue) {
         red   = Pixel.pushAndPullValue(base: rawValue, index: 2)
         green = Pixel.pushAndPullValue(base: rawValue, index: 1)
@@ -43,6 +53,7 @@ public struct Pixel : RawRepresentable, Hashable, Equatable {
     
     
     /// This is a private version used internally for performance gains.
+    /// - Warning: DO NOT USE
     /// - Note: DO NOT USE
     public init(red : SubValue, green : SubValue, blue : SubValue, rawValue : RawValue) {
         self.red = red
@@ -52,10 +63,14 @@ public struct Pixel : RawRepresentable, Hashable, Equatable {
         self.hashValue = rawValue
     }
     
-    public let rawValue : RawValue
     
-    public let hashValue : Int
-    
+    /// Extract an index from an encoded rawValue
+    ///
+    /// - Note: `RawValue` is encoded as rgb so red is at the 2nd index.
+    /// - Parameters:
+    ///   - base: the `RawValue` to extract from
+    ///   - index: which channel to extract
+    /// - Returns: The subvalue represented in index
     public static func pushAndPullValue(base : RawValue, index : RawValue) -> SubValue {
         let howMuchToMove = index * Pixel.sigfigs
         return (base & (Pixel.digitFullOfOnesUpToSigfigs << howMuchToMove)) >> howMuchToMove
