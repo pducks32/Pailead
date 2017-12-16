@@ -10,6 +10,7 @@ import Foundation
 public protocol MMCQProcessingDelegate : class {
     func mmcq(_ mmcq : ModifiedMedianCutQuantizer, didSplitBox : VBox, into : (VBox, VBox))
     func mmcq(_ mmcq : ModifiedMedianCutQuantizer, didStartWith vbox : VBox)
+    func mmcqDidFinishProcessing(_ mmcq : ModifiedMedianCutQuantizer)
 }
 
 public class ModifiedMedianCutQuantizer {
@@ -40,6 +41,7 @@ public class ModifiedMedianCutQuantizer {
         while queue.count < numberOfSwatches {
             makeCut()
         }
+        self.delegate?.mmcqDidFinishProcessing(self)
     }
     
     public func getVBoxes() -> ArraySlice<VBox> {
