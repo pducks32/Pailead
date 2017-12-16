@@ -35,9 +35,8 @@ public class ModifiedMedianCutQuantizer {
     }
     
     public func run() {
-        DispatchQueue.main.async {
-            self.delegate?.mmcq(self, didStartWith: self.queue.peek())
-        }
+        guard !queue.isEmpty else { return }
+        self.delegate?.mmcq(self, didStartWith: self.queue.peek())
         while queue.count < numberOfSwatches {
             makeCut()
         }
@@ -57,9 +56,7 @@ public class ModifiedMedianCutQuantizer {
     private func makeCut() {
         guard let nextLargest = queue.poll() else { return }
         let (alpha, beta) = nextLargest.split()
-        DispatchQueue.main.async {
-            self.delegate?.mmcq(self, didSplitBox: nextLargest, into: (alpha, beta))
-        }
+        self.delegate?.mmcq(self, didSplitBox: nextLargest, into: (alpha, beta))
         queue.offer(alpha)
         queue.offer(beta)
     }
