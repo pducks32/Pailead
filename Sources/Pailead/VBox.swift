@@ -160,7 +160,8 @@ public class VBox : Hashable {
         
         let midMinPixel = Pixel([dimension: splitPoint], default: minPixel)
         let midMaxPixel = Pixel([dimension: splitPoint], default: maxPixel)
-        return (VBox(min: minPixel, max: midMaxPixel, contents: smaller), VBox(min: midMinPixel, max: maxPixel, contents: larger))
+        return (VBox(min: minPixel, max: midMaxPixel, contents: smaller),
+                VBox(min: midMinPixel, max: maxPixel, contents: larger))
     }
     
     /// Calculate the median point at which point there is an equal
@@ -173,7 +174,7 @@ public class VBox : Hashable {
         
         let lengthOfLongest = length(along: dimension)
         
-        var slicesSums : [Int] = [Int](repeating: 0, count: lengthOfLongest + 1)
+        var slicesSums = [Int](repeating: 0, count: lengthOfLongest + 1)
         let minDimension = inital(in: dimension)
         contents.forEach { (swatch) in
             let (pixel, population) = swatch
