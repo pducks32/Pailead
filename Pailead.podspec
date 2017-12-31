@@ -15,5 +15,5 @@ Extract average colors from an image just like Googles Palette library on Androi
 
   s.ios.deployment_target = '8.0'
 
-  s.source_files = 'Pailead/Sources/**/*'
+  s.source_files = 'Sources/Pailead/**/*'
 end
