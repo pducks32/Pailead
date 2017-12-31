@@ -11,6 +11,14 @@ Pailead.extractTop(10, from: image) { colors in
 }
 ```
 
+### Todo
+- [ ] Switch to swatches
+- [ ] Paralleize pixel extraction
+- [ ] Add more performance tests
+- [ ] Make better docs with example uses
+- [ ] Optimize processing loop
+- [ ] Add support for other clustering algorithms
+
 ### Name
 
 If palette is pronounced *pa-let* then Pailead is pronounced *pa-lid*.
