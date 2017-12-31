@@ -141,7 +141,6 @@ public class VBox : Hashable {
     
     /// Split the vbox into 2 equally populated vboxes
     ///
-    /// - Todo: Calculate min and max so double loop won't be needed.
     /// - Returns: The two vboxes
     public func split() -> (VBox, VBox) {
         
