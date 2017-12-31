@@ -21,10 +21,20 @@ private class BlockMMCQProcessingDelegate : MMCQProcessingDelegate {
     }
 }
 
-struct Pailead {
+public struct Pailead {
     private static let defaultQueue = DispatchQueue(label: "com.patrickmetcalfe.pailead.processing", qos: .userInitiated, attributes: DispatchQueue.Attributes.concurrent, autoreleaseFrequency: DispatchQueue.AutoreleaseFrequency.workItem, target: nil)
     
-    static func extractTop(_ numberOfColors : Int, from image : Image, onQueue queue : DispatchQueue? = nil, completionHandler : @escaping (([Color]) -> Void)) {
+    
+    /// Extract the top average colors from a image
+    /// - Remarks: Using Modified Median Cut Quantization, extract
+    ///            the top colors found in the image using the given queue.
+    ///
+    /// - Parameters:
+    ///   - numberOfColors: Number of avergae colors to extract
+    ///   - image: The image to extract from.
+    ///   - queue: The queue to use. (default is a private concurrent queue).
+    ///   - completionHandler: What to do with the colors once generated.
+    public static func extractTop(_ numberOfColors : Int, from image : Image, onQueue queue : DispatchQueue? = nil, completionHandler : @escaping (([Color]) -> Void)) {
         let chosenQueue = queue ?? defaultQueue
         chosenQueue.async {
             guard let pixelData = image.pixelData() else { fatalError("Pixel Extraction Failed") }
