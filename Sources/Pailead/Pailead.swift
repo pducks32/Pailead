@@ -22,7 +22,8 @@ private class BlockMMCQProcessingDelegate : MMCQProcessingDelegate {
 }
 
 public struct Pailead {
-    private static let defaultQueue = DispatchQueue(label: "com.patrickmetcalfe.pailead.processing", qos: .userInitiated, attributes: DispatchQueue.Attributes.concurrent, autoreleaseFrequency: DispatchQueue.AutoreleaseFrequency.workItem, target: nil)
+    
+    private static let defaultQueue = DispatchQueue(label: "com.patrickmetcalfe.pailead.processing")
     
     
     /// Extract the top average colors from a image
