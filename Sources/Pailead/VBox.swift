@@ -36,7 +36,7 @@ public class VBox : Hashable {
     /// The pixels that lie within the vbox
     public var contents : [Pixel : Int] = [:]
     
-    //// The volume in rgb space that the vbox occupies
+    /// The volume in rgb space that the vbox occupies
     public var volume : Pixel.SubValue {
         return redExtent * greenExtent * blueExtent
     }
@@ -387,17 +387,25 @@ public class VBox : Hashable {
     }
 }
 
+extension VBox : CustomDebugStringConvertible {
+    public var debugDescription : String {
+        return "(\(initialRed)-\(finalRed), \(initialGreen)-\(finalGreen), \(initialBlue)-\(finalBlue))"
+    }
+}
+
 extension Pixel {
     
     subscript(axis : VBox.Axis) -> Pixel.SubValue {
-        switch axis {
-        case .red: return red
-        case .green: return green
-        case .blue: return blue
+        get {
+            switch axis {
+            case .red: return red
+            case .green: return green
+            case .blue: return blue
+            }
         }
     }
     
-    init(_ elements : [VBox.Axis: Pixel.SubValue]) {
-        self.init(red: elements[.red] ?? 0, green: elements[.green] ?? 0, blue: elements[.blue] ?? 0)
+    init(_ elements : [VBox.Axis: Pixel.SubValue], `default` aDefault : Pixel = Pixel(red: 0, green: 0, blue: 0)) {
+        self.init(red: elements[.red] ?? aDefault.red, green: elements[.green] ?? aDefault.green, blue: elements[.blue] ?? aDefault.blue)
     }
 }
