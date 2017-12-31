@@ -63,7 +63,7 @@ public class HSLConverter {
     }
 }
 
-/// Organzie swatches into well adjusted palletes
+/// Organize swatches into well adjusted palletes
 public struct SwatchOrganizer {
 }
 
