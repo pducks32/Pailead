@@ -158,7 +158,10 @@ public class VBox : Hashable {
                 larger[lineItem.key] = lineItem.value
             }
         }
-        return (VBox(pixels: smaller), VBox(pixels: larger))
+        
+        let midMinPixel = Pixel([dimension: splitPoint], default: minPixel)
+        let midMaxPixel = Pixel([dimension: splitPoint], default: maxPixel)
+        return (VBox(min: minPixel, max: midMaxPixel, contents: smaller), VBox(min: midMinPixel, max: maxPixel, contents: larger))
     }
     
     /// Calculate the median point at which point there is an equal
