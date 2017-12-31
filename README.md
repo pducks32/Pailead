@@ -16,3 +16,6 @@ Pailead.extractTop(10, from: image) { colors in
 If palette is pronounced *pa-let* then Pailead is pronounced *pa-lid*.
 
 The word comes from the Irish word paileád meaning palette which is what this library extracts.
+
+### Author
+- @pducks32 (Patrick Metcalfe, git@patrickmetcalfe.com)
