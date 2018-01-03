@@ -63,4 +63,93 @@ public struct Pailead {
             paileadThingy.run()
         }
     }
+    
+    class PaletteMaker {
+        let swatches : [Swatch]
+        
+        var darkVibrantSwatch : Swatch?
+        var vibrantSwatch : Swatch?
+        var lightVibrantSwatch : Swatch?
+        
+        var darkMutedSwatch : Swatch?
+        var mutedSwatch : Swatch?
+        var lightMutedSwatch : Swatch?
+        
+        let highestPopulation : Int
+        
+        init(swatches : [Swatch]) {
+            self.swatches = swatches
+            self.highestPopulation = swatches.map({ $0.count }).max()!
+            
+            organizeSwatches()
+        }
+        
+        func organizeSwatches() {
+            vibrantSwatch = findColor(targetLuma: 0.5, minLuma: 0.3, maxLuma: 0.7, targetSaturation: 1, minSaturation: 0.35, maxSaturation: 1)
+            
+            lightVibrantSwatch = findColor(targetLuma: 0.74, minLuma: 0.55, maxLuma: 1, targetSaturation: 1, minSaturation: 0.35, maxSaturation: 1)
+            
+            darkVibrantSwatch = findColor(targetLuma: 0.26, minLuma: 0, maxLuma: 0.45, targetSaturation: 1, minSaturation: 0.35, maxSaturation: 1)
+            
+            
+            mutedSwatch = findColor(targetLuma: 0.5, minLuma: 0.3, maxLuma: 0.7, targetSaturation: 0.3, minSaturation: 0, maxSaturation: 0.4)
+            
+            lightMutedSwatch = findColor(targetLuma: 0.74, minLuma: 0.55, maxLuma: 1, targetSaturation: 0.3, minSaturation: 0, maxSaturation: 0.4)
+            
+            darkMutedSwatch = findColor(targetLuma: 0.26, minLuma: 0, maxLuma: 0.45, targetSaturation: 0.3, minSaturation: 0, maxSaturation: 0.4)
+        }
+        
+        func isAlreadySelected(_ swatch : Swatch) -> Bool {
+            return vibrantSwatch == swatch || darkVibrantSwatch == swatch ||
+                    lightVibrantSwatch == swatch || mutedSwatch == swatch ||
+                    darkMutedSwatch == swatch || lightMutedSwatch == swatch
+        }
+        
+        func findColor(targetLuma : Float, minLuma : Float, maxLuma : Float,
+                       targetSaturation : Float, minSaturation : Float, maxSaturation : Float) -> Swatch? {
+            var max : Swatch? = nil
+            var maxValue : Float = 0
+            let converter = HSLConverter()
+            swatches.forEach { swatch in
+                let (_, sat, luma) = converter.hslFor(swatch.pixel)
+                if (sat >= minSaturation && sat <= maxSaturation &&
+                    luma >= minLuma && luma <= maxLuma && !isAlreadySelected(swatch)) {
+                    let thisValue : Float = findComparisonValue(saturation: sat, targetSaturation: targetSaturation, luma: luma, targetLuma: targetLuma, population: swatch.count, highestPopulation: highestPopulation)
+                    if (max == nil || thisValue > maxValue) {
+                        max = swatch
+                        maxValue = thisValue;
+                    }
+                }
+            }
+            
+            return max
+        }
+        
+        func findComparisonValue(saturation : Float, targetSaturation : Float, luma : Float, targetLuma : Float, population : Int, highestPopulation : Int) -> Float {
+            return weightedMean((invertDiff(value: saturation, targetValue: targetSaturation), 3),
+                                (invertDiff(value: luma, targetValue: targetLuma), 6.5),
+                                (Float(population) / Float(highestPopulation), 0.5))
+        }
+        
+        func invertDiff(value : Float, targetValue : Float) -> Float {
+            return 1.0 - abs(value - targetValue)
+        }
+        
+        func weightedMean(_ values : (Float, Float)...) -> Float {
+            var sum : Float = 0
+            var sumWeight : Float = 0
+            values.forEach { entry in
+                sum += (entry.0 * entry.1)
+                sumWeight += entry.1
+            }
+            return sum / sumWeight
+        }
+        
+    }
+    
+    
+    func generatePalettes(from image : Image) -> [Swatch] {
+        
+        return []
+    }
 }
