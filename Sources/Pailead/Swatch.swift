@@ -91,3 +91,9 @@ extension Swatch : CustomPlaygroundQuickLookable {
         return .color(color)
     }
 }
+
+extension Swatch : Equatable {
+    public static func ==(lhs: Swatch, rhs: Swatch) -> Bool {
+        return lhs.pixel == rhs.pixel
+    }
+}
