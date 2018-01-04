@@ -48,8 +48,8 @@ class SplitTests: XCTestCase {
     
     func testSplitDoNotSharePixels() {
         let (alpha, beta) = firstSplit
-        let alphaPixels = Set(alpha.contents.keys)
-        let betaPixels = Set(beta.contents.keys)
+        let alphaPixels = alpha.contents
+        let betaPixels = beta.contents
         
         XCTAssertTrue(alphaPixels.isDisjoint(with: betaPixels))
     }
@@ -77,13 +77,13 @@ class SplitTests: XCTestCase {
     func testSplitBoxesHaveCorrectBounds() {
         let (alpha, beta) = firstSplit
         
-        let alphaPixels = alpha.contents.keys
+        let alphaPixels = alpha.contents.map({ $0.pixel })
         let alphaMinPixel = alpha.minPixel
         let alphaMaxPixel = alpha.maxPixel
         
         let isThereAnAlphaPixelOutsideBounds = alphaPixels.contains(where: pixelIsOutside(alphaMinPixel, and: alphaMaxPixel))
         
-        let betaPixels = beta.contents.keys
+        let betaPixels = beta.contents.map({ $0.pixel })
         let betaMinPixel = beta.minPixel
         let betaMaxPixel = beta.maxPixel
         

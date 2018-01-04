@@ -66,12 +66,12 @@ class VBoxTests: XCTestCase {
     }
     
     func testPopulations() {
-        let expectedPopulations = [
+        let expectedPopulations = Set<Swatch>([
             shouldAppearOnce: 1,
             shouldAppearOnceToo: 1,
             shouldAppearTwice: 2,
             shouldAppearThrice: 3
-        ]
+        ].map({ Swatch($0.0, count: $0.1) }))
         
         XCTAssertEqual(subject.contents, expectedPopulations)
     }

@@ -34,13 +34,12 @@ public class VBox : Hashable {
     /// The superposition of **maximum** subvaues in each dimension
     public var maxPixel : Pixel
     /// The pixels that lie within the vbox
-    public var contents : [Pixel : Int] = [:]
+    public var contents : Set<Swatch> = []
     
     /// The volume in rgb space that the vbox occupies
     public var volume : Pixel.SubValue {
         return redExtent * greenExtent * blueExtent
     }
-    
     
     /// Create a new VBox with contents
     ///
@@ -49,6 +48,14 @@ public class VBox : Hashable {
     ///   - max: The maximum possible pixel
     ///   - contents: The pixels and their frequencies
     public init(min : Pixel, max : Pixel, contents : [Pixel: Int]) {
+        self.minPixel = min
+        self.maxPixel = max
+        self.contents = Set(contents.map({ entry -> Swatch in
+            return Swatch(entry.key, count: entry.value)
+        }))
+    }
+    
+    public init(min : Pixel, max : Pixel, contents : Set<Swatch>) {
         self.minPixel = min
         self.maxPixel = max
         self.contents = contents
@@ -66,6 +73,7 @@ public class VBox : Hashable {
         var greenMax : Pixel.SubValue = 0
         var blueMax  : Pixel.SubValue = 0
         
+        var swatches = Set<Swatch>(minimumCapacity: pixels.capacity)
         pixels.keys.forEach { pixel in
             if pixel.blue < blueMin {
                 blueMin = pixel.blue
@@ -86,12 +94,12 @@ public class VBox : Hashable {
             if pixel.red > redMax {
                 redMax = pixel.red
             }
+            swatches.insert(Swatch(pixel, count: pixels[pixel]!))
         }
         self.minPixel = Pixel(red: redMin, green: greenMin, blue: blueMin)
         self.maxPixel = Pixel(red: redMax, green: greenMax, blue: blueMax)
-        self.contents = pixels
+        self.contents = swatches
     }
-    
     
     /// Create a new Vbox and calculate the pixel frequencies and min/max pixels
     ///
@@ -103,30 +111,36 @@ public class VBox : Hashable {
         var redMax   : Pixel.SubValue = 0
         var greenMax : Pixel.SubValue = 0
         var blueMax  : Pixel.SubValue = 0
-        var contents : [Pixel: Int] = [:]
+        var contents : Set<Swatch> = []
         contents.reserveCapacity(pixels.count)
         
+        /// - todo: No need to do min/max check if we already encountered pixel
         pixels.forEach { pixel in
-            if pixel.blue < blueMin {
-                blueMin = pixel.blue
+            if let removal = contents.remove(Swatch(pixel, count: 0)) {
+                contents.update(with: Swatch(pixel, count: removal.count + 1))
+            } else {
+                contents.insert(Swatch(pixel, count: 1))
+                
+                if pixel.blue < blueMin {
+                    blueMin = pixel.blue
+                }
+                if pixel.green < greenMin {
+                    greenMin = pixel.green
+                }
+                if pixel.red < redMin {
+                    redMin = pixel.red
+                }
+                
+                if pixel.blue > blueMax {
+                    blueMax = pixel.blue
+                }
+                if pixel.green > greenMax {
+                    greenMax = pixel.green
+                }
+                if pixel.red > redMax {
+                    redMax = pixel.red
+                }
             }
-            if pixel.green < greenMin {
-                greenMin = pixel.green
-            }
-            if pixel.red < redMin {
-                redMin = pixel.red
-            }
-            
-            if pixel.blue > blueMax {
-                blueMax = pixel.blue
-            }
-            if pixel.green > greenMax {
-                greenMax = pixel.green
-            }
-            if pixel.red > redMax {
-                redMax = pixel.red
-            }
-            contents[pixel] = (contents[pixel] ?? 0) + 1
         }
         
         self.minPixel = Pixel(red: redMin, green: greenMin, blue: blueMin)
@@ -148,18 +162,16 @@ public class VBox : Hashable {
         let dimension = longestDimension
         let splitPoint = median(along: dimension)
         
-        var smaller = [Pixel : Int]()
-        var larger  = [Pixel : Int]()
+        var smaller = Set<Swatch>()
+        var larger  = Set<Swatch>()
         contents.forEach { (lineItem) in
-            if lineItem.key[dimension] < splitPoint {
-                smaller[lineItem.key] = lineItem.value
+            if lineItem.pixel[dimension] < splitPoint {
+                smaller.insert(lineItem)
             } else {
-                larger[lineItem.key] = lineItem.value
+                larger.insert(lineItem)
             }
         }
-        print("SplitPoint: \(splitPoint)")
-        print("MinPixel: \(minPixel)")
-        print("MaxPixel: \(maxPixel)")
+        
         let midMinPixel = Pixel([dimension: splitPoint], default: minPixel)
         let midMaxPixel = Pixel([dimension: splitPoint], default: maxPixel)
         return (VBox(min: minPixel, max: midMaxPixel, contents: smaller),
@@ -178,10 +190,9 @@ public class VBox : Hashable {
         
         var slicesSums = [Int](repeating: 0, count: lengthOfLongest + 1)
         let minDimension = inital(in: dimension)
-        contents.forEach { (swatch) in
-            let (pixel, population) = swatch
-            let redIndex = pixel[dimension] - minDimension
-            slicesSums[Int(redIndex)] += population
+        contents.forEach { swatch in
+            let redIndex = swatch.pixel[dimension] - minDimension
+            slicesSums[Int(redIndex)] += swatch.count
         }
         
         var thingToAddToNext = 0
@@ -260,11 +271,11 @@ public class VBox : Hashable {
         var blueSum = 0
         
         contents.forEach { (swatch) in
-            totalPopulation += swatch.value
-            let pixel = swatch.key
-            redSum += pixel.red * swatch.value
-            greenSum += pixel.green * swatch.value
-            blueSum += pixel.blue * swatch.value
+            totalPopulation += swatch.count
+            let pixel = swatch.pixel
+            redSum += pixel.red * swatch.count
+            greenSum += pixel.green * swatch.count
+            blueSum += pixel.blue * swatch.count
         }
         
         let finalRed = round(Double(redSum) / Double(totalPopulation))
@@ -311,11 +322,7 @@ public class VBox : Hashable {
     /// - Parameter pixel: the pixel to check
     /// - Returns: Whether the contents of the vbox contains the pixel
     public func contains(_ pixel : Pixel) -> Bool {
-        if let _ = contents.index(forKey: pixel) {
-            return true
-        } else {
-            return false
-        }
+        return contents.contains(Swatch(pixel, count: 0))
     }
     
     /// Check if pixel is within or on bounds of vbox
