@@ -1,6 +1,7 @@
 import Foundation
 
 #if os(macOS)
+    import AppKit
     public typealias Image = NSImage
     public typealias Color = NSColor
 #elseif os(iOS)
