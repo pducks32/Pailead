@@ -15,10 +15,10 @@ class PriorityQueueTests: XCTestCase {
         let pqLarge = PriorityQueue(unsortedItems, compareUsingLargestValue: \String.count)
         let pqSmall = PriorityQueue(unsortedItems, compareUsingSmallestValue: \String.count)
         
-        let pqLargeSuperLong = PriorityQueue(unsortedItems, comparator: { first, second in
+        let pqLargeSuperLong = PriorityQueue(unsortedItems, isOrderedBefore: { first, second in
             return first.count > second.count
         })
-        let pqSmallSuperLong = PriorityQueue(unsortedItems, comparator: { first, second in
+        let pqSmallSuperLong = PriorityQueue(unsortedItems, isOrderedBefore: { first, second in
             return first.count < second.count
         })
         
