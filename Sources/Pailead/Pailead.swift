@@ -55,6 +55,21 @@ public struct Pailead {
     
     private static let defaultQueue = DispatchQueue(label: "com.patrickmetcalfe.pailead.processing")
     
+    public static func optimallyResizeImage(_ image : Image, maxDimension : CGFloat = 100) -> Image {
+        let height = image.pixelSize.height
+        let width = image.pixelSize.width
+        let minDimension = min(width, height)
+        
+        if minDimension <= maxDimension {
+            return image
+        }
+        
+        let scaleRatio = maxDimension / minDimension
+        let newWidth = round(width * scaleRatio)
+        let newHeight = round(height * scaleRatio)
+        return image.resized(toWidth: newWidth, and: newHeight) ?? image
+    }
+    
     
     /// Extract the top average colors from a image
     /// - Remarks: Using Modified Median Cut Quantization, extract
@@ -67,8 +82,9 @@ public struct Pailead {
     ///   - completionHandler: What to do with the colors once generated.
     public static func extractTop(_ numberOfColors : Int, from image : Image, onQueue queue : DispatchQueue? = nil, completionHandler : @escaping (([Color]) -> Void)) {
         let chosenQueue = queue ?? defaultQueue
+        let scaledImage = Pailead.optimallyResizeImage(image)
         chosenQueue.async {
-            guard let pixelData = image.pixelData() else { fatalError("Pixel Extraction Failed") }
+            guard let pixelData = scaledImage.pixelData() else { fatalError("Pixel Extraction Failed") }
             var pixels : [Pixel] = []
             pixels.reserveCapacity(pixelData.count / 4)
             
