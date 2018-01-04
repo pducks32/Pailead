@@ -4,39 +4,10 @@ import Foundation
     import AppKit
     public typealias Image = NSImage
     public typealias Color = NSColor
-    
-    extension NSImage {
-        func resized(toWidth width: CGFloat, and height : CGFloat) -> NSImage? {
-            let img = NSImage(size: CGSize(width: width, height: height))
-            
-            img.lockFocus()
-            
-            let ctx = NSGraphicsContext.current
-            ctx?.imageInterpolation = .high
-            self.draw(in: NSMakeRect(0, 0, width, height), from: NSMakeRect(0, 0, size.width, size.height), operation: .copy, fraction: 1)
-            img.unlockFocus()
-            
-            return img
-        }
-    }
 #elseif os(iOS)
     import UIKit
     public typealias Image = UIImage
     public typealias Color = UIColor
-    
-    extension Image {
-        func resized(toWidth width: CGFloat, and height : CGFloat) -> UIImage? {
-            let imageView = UIImageView(frame: CGRect(origin: .zero, size: CGSize(width: width, height: height)))
-            imageView.contentMode = .scaleAspectFit
-            imageView.image = self
-            UIGraphicsBeginImageContextWithOptions(imageView.bounds.size, false, scale)
-            guard let context = UIGraphicsGetCurrentContext() else { return nil }
-            imageView.layer.render(in: context)
-            guard let result = UIGraphicsGetImageFromCurrentImageContext() else { return nil }
-            UIGraphicsEndImageContext()
-            return result
-        }
-    }
 #endif
 
 private class BlockMMCQProcessingDelegate : MMCQProcessingDelegate {
@@ -75,7 +46,7 @@ public struct Pailead {
         let scaleRatio = maxDimension / minDimension
         let newWidth = round(width * scaleRatio)
         let newHeight = round(height * scaleRatio)
-        return image.resized(toWidth: newWidth, and: newHeight) ?? image
+        return image.resizedTo(width: newWidth, height: newHeight) ?? image
     }
     
     
@@ -261,11 +232,5 @@ public struct Pailead {
             return sum / sumWeight
         }
         
-    }
-    
-    
-    func generatePalettes(from image : Image) -> [Swatch] {
-        
-        return []
     }
 }

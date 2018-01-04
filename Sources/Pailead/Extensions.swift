@@ -11,7 +11,64 @@
     import UIKit
 #endif
 
+/// Allows cross platfrom image resizing
+public protocol Resizeable {
+    /// Returns a copy of the image that fits the given dimensions
+    ///
+    /// - Parameters:
+    ///   - width: The new width
+    ///   - height: The new height
+    /// - Returns: A resized image copy or nil if error
+    func resizedTo(width : CGFloat, height : CGFloat) -> Image?
+    
+    /// Returns a copy of the image that fits the given size
+    ///
+    /// - Parameters:
+    ///   - size: The new size
+    /// - Returns: A resized image copy or nil if error
+    func resizedTo(_ size : CGSize) -> Image?
+}
+
+extension Resizeable {
+    public func resizedTo(width : CGFloat, height : CGFloat) -> Image? {
+        return resizedTo(CGSize(width: width, height: height))
+    }
+}
+
+#if os(macOS)
+    extension NSImage : Resizeable {
+        public func resizedTo(_ newSize : CGSize) -> Image? {
+            let img = NSImage(size: newSize)
+            
+            img.lockFocus()
+            
+            let ctx = NSGraphicsContext.current
+            ctx?.imageInterpolation = .high
+            self.draw(in: NSRect(origin: .zero, size: newSize), from: NSRect(origin: .zero, size: size), operation: .copy, fraction: 1)
+            img.unlockFocus()
+            
+            return img
+        }
+    }
+#elseif os(iOS)
+    
+    extension UIImage : Resizeable {
+        public func resizedTo(_ newSize : CGSize) -> Image? {
+            let imageView = UIImageView(frame: CGRect(origin: .zero, size: newSize))
+            imageView.contentMode = .scaleAspectFit
+            imageView.image = self
+            UIGraphicsBeginImageContextWithOptions(imageView.bounds.size, false, scale)
+            guard let context = UIGraphicsGetCurrentContext() else { return nil }
+            imageView.layer.render(in: context)
+            guard let result = UIGraphicsGetImageFromCurrentImageContext() else { return nil }
+            UIGraphicsEndImageContext()
+            return result
+        }
+    }
+#endif
+
 extension Image {
+    /// The number of pixels in each dimension of the image
     var pixelSize : CGSize {
         #if os(macOS)
             guard let firstRepresentaion = self.representations.first else {
@@ -28,6 +85,7 @@ extension Image {
 
 public extension Image {
     public typealias PixelFormat = UInt8
+    /// The individual pixel values of the image
     public func pixelData() -> [PixelFormat]? {
         let componentCount = 4
         let size = self.pixelSize
