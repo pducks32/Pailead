@@ -46,6 +46,18 @@ public class VBox : Hashable {
     /// - Parameters:
     ///   - min: The minimum possible pixel
     ///   - max: The maximum possible pixel
+    ///   - contents: The swatches
+    public init(min : Pixel, max : Pixel, contents : Set<Swatch>) {
+        self.minPixel = min
+        self.maxPixel = max
+        self.contents = contents
+    }
+    
+    /// Create a new VBox with dictionary of pixels and their frequencies
+    ///
+    /// - Parameters:
+    ///   - min: The minimum possible pixel
+    ///   - max: The maximum possible pixel
     ///   - contents: The pixels and their frequencies
     public init(min : Pixel, max : Pixel, contents : [Pixel: Int]) {
         self.minPixel = min
@@ -54,13 +66,6 @@ public class VBox : Hashable {
             return Swatch(entry.key, count: entry.value)
         }))
     }
-    
-    public init(min : Pixel, max : Pixel, contents : Set<Swatch>) {
-        self.minPixel = min
-        self.maxPixel = max
-        self.contents = contents
-    }
-    
     
     /// Create a new VBox and calculate min and max pixels
     ///
