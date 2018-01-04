@@ -160,10 +160,11 @@ class MMCQTests: XCTestCase {
         let bundle = Bundle(for: MMCQTests.self)
         #if os(iOS)
         let image = try require(UIImage(named: "flower.jpg", in: bundle, compatibleWith: nil))
-        guard let pixelData = image.pixelData() else { fatalError("Ugh") }
         #elseif os(macOS)
         let image = try require(bundle.image(forResource: NSImage.Name("flower.jpg")))
         #endif
+        let scaledImage = Pailead.optimallyResizeImage(image)
+        guard let pixelData = scaledImage.pixelData() else { fatalError("Ugh") }
         var pixels : [Pixel] = []
         pixels.reserveCapacity(pixelData.count / 4)
         
