@@ -97,3 +97,9 @@ extension Swatch : Equatable {
         return lhs.pixel == rhs.pixel
     }
 }
+
+extension Swatch : Hashable {
+    public var hashValue : Int {
+        return pixel.hashValue
+    }
+}
