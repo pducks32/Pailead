@@ -14,6 +14,7 @@ Extract average colors from an image just like Googles Palette library on Androi
   s.social_media_url = 'https://twitter.com/pducks32'
 
   s.ios.deployment_target = '8.0'
+  s.osx.deployment_target = '10.12'
 
   s.source_files = 'Sources/Pailead/**/*'
 end
