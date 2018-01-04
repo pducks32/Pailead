@@ -38,11 +38,12 @@ class SplitTests: XCTestCase {
     
     func testSplitsDontOverlap() {
         let (alpha, beta) = firstSplit
-        let hasMinPixel = alpha.covers(beta.minPixel)
-        let hasMaxPixel = alpha.covers(beta.maxPixel)
         
-        XCTAssertFalse(hasMinPixel)
-        XCTAssertFalse(hasMaxPixel)
+        let doesAlphaHaveBetasMin = alpha.coversWithinBoundary(beta.minPixel)
+        let doesAlphaHaveBetasMax = alpha.covers(beta.maxPixel)
+        
+        XCTAssertFalse(doesAlphaHaveBetasMin)
+        XCTAssertFalse(doesAlphaHaveBetasMax)
     }
     
     func testSplitDoNotSharePixels() {

@@ -157,7 +157,9 @@ public class VBox : Hashable {
                 larger[lineItem.key] = lineItem.value
             }
         }
-        
+        print("SplitPoint: \(splitPoint)")
+        print("MinPixel: \(minPixel)")
+        print("MaxPixel: \(maxPixel)")
         let midMinPixel = Pixel([dimension: splitPoint], default: minPixel)
         let midMaxPixel = Pixel([dimension: splitPoint], default: maxPixel)
         return (VBox(min: minPixel, max: midMaxPixel, contents: smaller),
@@ -316,7 +318,7 @@ public class VBox : Hashable {
         }
     }
     
-    /// Check if pixel is within bounds of vbox
+    /// Check if pixel is within or on bounds of vbox
     ///
     /// - Parameter pixel: the pixel to check
     /// - Returns: whether the pixel lies within the box
@@ -326,7 +328,7 @@ public class VBox : Hashable {
             covers(value: pixel.blue, in: .blue)
     }
     
-    /// Check if a pixel subvalue is within the bounds of the vbox
+    /// Check if a pixel subvalue is within or on the bounds of the vbox
     ///
     /// - Parameters:
     ///   - value: the subvalue to be evaluated
@@ -335,6 +337,27 @@ public class VBox : Hashable {
     public func covers(value : Pixel.SubValue, in axis : Axis) -> Bool {
         let extremitiesInAxis = extremities(in: axis)
         return extremitiesInAxis.lower <= value && value <= extremitiesInAxis.upper
+    }
+    
+    /// Check if pixel is within bounds of vbox
+    ///
+    /// - Parameter pixel: the pixel to check
+    /// - Returns: whether the pixel lies within the box
+    public func coversWithinBoundary(_ pixel : Pixel) -> Bool {
+        return coversWithinBoundary(value: pixel.red, in: .red) &&
+            coversWithinBoundary(value: pixel.green, in: .green) &&
+            coversWithinBoundary(value: pixel.blue, in: .blue)
+    }
+    
+    /// Check if a pixel subvalue is within the bounds of the vbox
+    ///
+    /// - Parameters:
+    ///   - value: the subvalue to be evaluated
+    ///   - axis: along which acess to check for subvalue
+    /// - Returns: whether the subvalue lies within the bounds of the axis
+    public func coversWithinBoundary(value : Pixel.SubValue, in axis : Axis) -> Bool {
+        let extremitiesInAxis = extremities(in: axis)
+        return extremitiesInAxis.lower < value && value < extremitiesInAxis.upper
     }
     
     /// Lowest red value in box
