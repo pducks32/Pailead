@@ -116,8 +116,8 @@ public struct Pailead {
         /// - Parameter swatches: The base image's swatches
         public init(swatches : Set<Swatch>) {
             self.swatches = swatches
-            self.highestPopulation = swatches.map({ $0.count }).max()!
-            
+            self.highestPopulation = swatches.map({ $0.count }).max() ?? 0
+            guard highestPopulation > 0 else { return }
             organizeSwatches()
         }
         
