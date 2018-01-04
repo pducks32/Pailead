@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'Pailead'
-  s.version          = '1.0.0'
+  s.version          = '1.1.0'
   s.summary          = 'Extract a color palette from an image'
 
   s.description      = <<-DESC
