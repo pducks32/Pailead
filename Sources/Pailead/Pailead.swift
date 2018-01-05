@@ -174,6 +174,9 @@ public struct Pailead {
         
         /// Reduce the swatch and the target swatch to a comparable value
         ///
+        /// - Note: The specific weights were taken from Android's Palette
+        ///         open source code.
+        ///
         /// - Parameters:
         ///   - saturation: The current swatch saturation
         ///   - targetSaturation: The target swatch saturation
