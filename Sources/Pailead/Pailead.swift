@@ -49,6 +49,18 @@ public struct Pailead {
         return image.resizedTo(width: newWidth, height: newHeight) ?? image
     }
     
+    /// Extract an image's palette
+    ///
+    /// - Parameters:
+    ///   - image: The image to use
+    ///   - numberOfColors: The max number of colors to base the palette on
+    ///   - queue: The queue to use for processing
+    ///   - completionHandler: What to do with the palette once generated
+    public static func extractPalette(from image : Image, numberOfColors : Int = 16, onQueue queue : DispatchQueue? = nil, completionHandler : @escaping ((Palette) -> Void)) {
+        extractTop(numberOfColors, from: image, onQueue: queue) { swatches in
+            completionHandler(Palette(baseImageSwatches: swatches))
+        }
+    }
     
     /// Extract the top average colors from a image
     /// - Remarks: Using Modified Median Cut Quantization, extract
