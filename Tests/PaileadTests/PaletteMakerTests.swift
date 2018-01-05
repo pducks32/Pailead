@@ -9,7 +9,7 @@ import XCTest
 @testable import Pailead
 
 class PaletteMakerTests : XCTestCase {
-    let maker = Pailead.PaletteMaker(swatches: [])
+    let maker = Palette(baseImageSwatches: [])
     
     func testNilSwatches() {
         XCTAssertNil(maker.vibrantSwatch)

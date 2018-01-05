@@ -53,7 +53,7 @@ class PaletteMakerPictureTests: XCTestCase {
     }
     
     func testSwatchesAreInRange () {
-        let maker = Pailead.PaletteMaker(swatches: swatches)
+        let maker = Palette(baseImageSwatches: swatches)
         if let darkVibrantSwatch = maker.darkVibrantSwatch {
             print("Dark Vibrant Found")
             XCTAssertWithin(self.luminance(of: darkVibrantSwatch), withinOrOn: (0, 0.45))
