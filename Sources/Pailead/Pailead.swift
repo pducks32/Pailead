@@ -135,7 +135,7 @@ public struct Pailead {
         ///
         /// - Parameter swatch: The swatch to check
         /// - Returns: Is the swatch already chosen
-        private func isAlreadySelected(_ swatch : Swatch) -> Bool {
+        internal func isAlreadySelected(_ swatch : Swatch) -> Bool {
             return vibrantSwatch == swatch || darkVibrantSwatch == swatch ||
                     lightVibrantSwatch == swatch || mutedSwatch == swatch ||
                     darkMutedSwatch == swatch || lightMutedSwatch == swatch
@@ -152,7 +152,7 @@ public struct Pailead {
         ///   - minSaturation: The min saturation that's acceptable
         ///   - maxSaturation: The max saturation that's acceptable
         /// - Returns: A swatch from the base image that fits into range
-        private func findColor(targetLuma : Float, minLuma : Float, maxLuma : Float,
+        internal func findColor(targetLuma : Float, minLuma : Float, maxLuma : Float,
                        targetSaturation : Float, minSaturation : Float, maxSaturation : Float) -> Swatch? {
             var max : Swatch? = nil
             var maxValue : Float = 0
@@ -183,7 +183,7 @@ public struct Pailead {
         ///   - highestPopulation: The highest population found in the base image
         /// - Returns: A weighted average of the distances from current swatch's values
         ///            to the target swatch's
-        private func findComparisonValue(saturation : Float, targetSaturation : Float, luma : Float, targetLuma : Float, population : Int, highestPopulation : Int) -> Float {
+        internal func findComparisonValue(saturation : Float, targetSaturation : Float, luma : Float, targetLuma : Float, population : Int, highestPopulation : Int) -> Float {
             return weightedMean((invertDiff(value: saturation, targetValue: targetSaturation), 3),
                                 (invertDiff(value: luma, targetValue: targetLuma), 6.5),
                                 (Float(population) / Float(highestPopulation), 0.5))
@@ -203,7 +203,7 @@ public struct Pailead {
         ///   - value: The value to check against target
         ///   - targetValue: The most ideal value
         /// - Returns: A float on (0, 1) where 1 is equality
-        private func invertDiff(value : Float, targetValue : Float) -> Float {
+        internal func invertDiff(value : Float, targetValue : Float) -> Float {
             return 1.0 - abs(value - targetValue)
         }
         
@@ -216,7 +216,7 @@ public struct Pailead {
         ///
         /// - Parameter values: List of (Element, Weight)
         /// - Returns: The weighted mean
-        private func weightedMean(_ values : (Float, Float)...) -> Float {
+        internal func weightedMean(_ values : (Float, Float)...) -> Float {
             var sum : Float = 0
             var sumWeight : Float = 0
             values.forEach { entry in
