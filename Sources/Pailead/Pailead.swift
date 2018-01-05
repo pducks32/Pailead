@@ -59,7 +59,7 @@ public struct Pailead {
     ///   - image: The image to extract from.
     ///   - queue: The queue to use. (default is a private concurrent queue).
     ///   - completionHandler: What to do with the colors once generated.
-    public static func extractTop(_ numberOfColors : Int, from image : Image, onQueue queue : DispatchQueue? = nil, completionHandler : @escaping (([Color]) -> Void)) {
+    public static func extractTop(_ numberOfColors : Int, from image : Image, onQueue queue : DispatchQueue? = nil, completionHandler : @escaping ((Set<Swatch>) -> Void)) {
         let chosenQueue = queue ?? defaultQueue
         let scaledImage = Pailead.optimallyResizeImage(image)
         chosenQueue.async {
@@ -75,14 +75,8 @@ public struct Pailead {
             let paileadThingy = ModifiedMedianCutQuantizer(numberOfSwatches: numberOfColors, pixels: pixels)
             let blockDelegate = BlockMMCQProcessingDelegate()
             blockDelegate.onDidFinish = { mmcq in
-                let colors = mmcq.getSwatches().map({ (pixel : Pixel) -> Color in
-                    let red = CGFloat(pixel.red) / 255
-                    let green = CGFloat(pixel.green) / 255
-                    let blue = CGFloat(pixel.blue) / 255
-                    
-                    return Color(red: red, green: green, blue: blue, alpha: 1)
-                })
-                completionHandler(colors)
+                let swatches = mmcq.getSwatches()
+                completionHandler(swatches)
             }
             paileadThingy.delegate = blockDelegate
             paileadThingy.run()

@@ -47,10 +47,10 @@ public class ModifiedMedianCutQuantizer {
         return queue.feed().prefix(numberOfSwatches)
     }
     
-    public func getSwatches() -> [Pixel] {
-        return getVBoxes().map { (vbox) -> Pixel in
+    public func getSwatches() -> Set<Swatch> {
+        return Set<Swatch>(getVBoxes().map { (vbox) -> Swatch in
             vbox.average()
-        }
+        })
     }
     
     private func makeCut() {
