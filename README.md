@@ -6,13 +6,22 @@ completely written in Swift and optimized for macOS and iOS.
 ### Usage
 ```swift
 let image = <#Image#>
-Pailead.extractTop(10, from: image) { colors in
-<#Do Something with Colors#>
+Pailead.extractPalette(from: image) { palette in
+<#Do Something with Palette#>
 }
 ```
 
+The generated palette provides some swatches that represent the image in different ways. These are:
+- Muted Swatch (middle range luma and low saturation)
+- Dark Muted Swatch (low range luma)
+- Light Muted Swatch (high range luma)
+- Vibrant Swatch (middle range luma and high saturation)
+- Dark Vibrant Swatch (low range luma)
+- Light Vibrant Swatch (high range luma)
+
 ### Todo
-- [ ] Switch to swatches
+- [x] Switch to swatches
+- [x] Add palette
 - [ ] Paralleize pixel extraction
 - [ ] Add more performance tests
 - [ ] Make better docs with example uses
