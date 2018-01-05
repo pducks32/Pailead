@@ -9,8 +9,9 @@ import XCTest
 @testable import Pailead
 
 class PaletteMakerTests : XCTestCase {
+    let maker = Pailead.PaletteMaker(swatches: [])
+    
     func testNilSwatches() {
-        let maker = Pailead.PaletteMaker(swatches: [])
         XCTAssertNil(maker.vibrantSwatch)
         XCTAssertNil(maker.mutedSwatch)
         
@@ -19,5 +20,16 @@ class PaletteMakerTests : XCTestCase {
         
         XCTAssertNil(maker.darkVibrantSwatch)
         XCTAssertNil(maker.darkMutedSwatch)
+    }
+    
+    func testInvertedDiff() {
+        XCTAssertEqual(maker.invertDiff(value: 10, targetValue: 10), 1)
+        
+        // Farther apart is lower that closer together values
+        XCTAssertLessThan(maker.invertDiff(value: 10, targetValue: 25), maker.invertDiff(value: 10, targetValue: 20))
+    }
+    
+    func testWeightedMean() {
+        XCTAssertEqual(maker.weightedMean((5, 3), (10, 1), (0, 4)), 3.125)
     }
 }
