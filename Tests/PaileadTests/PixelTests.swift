@@ -11,13 +11,13 @@ import XCTest
 extension XCTestCase {
     // We conform to LocalizedError in order to be able to output
     // a nice error message.
-    private struct RequireError<T>: LocalizedError {
+    public struct RequireError<T>: LocalizedError {
         let file: StaticString
         let line: UInt
         
         // It's important to implement this property, otherwise we won't
         // get a nice error message in the logs if our tests start to fail.
-        var errorDescription: String? {
+        public var errorDescription: String? {
             return "😱 Required value of type \(T.self) was nil at line \(line) in file \(file)."
         }
     }

@@ -19,7 +19,7 @@ import XCTest
 #endif
 
 extension Image {
-    var pixelSize : CGSize {
+    public var pixelSize : CGSize {
         #if os(macOS)
             guard let firstRepresentaion = self.representations.first else {
                 fatalError("NSImage#pixelSize - image does not have any representations")
