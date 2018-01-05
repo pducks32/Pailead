@@ -24,13 +24,14 @@ public class ModifiedMedianCutQuantizer {
         self.numberOfSwatches = numberOfSwatches
         self.pixels = pixels
         
-        
         self.queue = PriorityQueue<VBox> { (first, second) -> Bool in
             if !first.canSplit && second.canSplit { return false }
             return first.volume > second.volume
         }
         
-        let vbox = VBox(pixels: pixels)
+        let filteredPixels = pixels.filter { !self.shouldIgnore(pixel: $0) }
+        
+        let vbox = VBox(pixels: filteredPixels)
         queue.offer(vbox)
     }
     
@@ -59,5 +60,21 @@ public class ModifiedMedianCutQuantizer {
         self.delegate?.mmcq(self, didSplitBox: nextLargest, into: (alpha, beta))
         queue.offer(alpha)
         queue.offer(beta)
+    }
+    
+    private func getLuminence(of pixel : Pixel) -> Float {
+        let rf = Float(pixel.red) / 255.0
+        let gf = Float(pixel.green) / 255.0
+        let bf = Float(pixel.blue) / 255.0
+        
+        let theMax = max(rf, max(gf, bf))
+        let theMin = min(rf, min(gf, bf))
+        
+        return (theMax + theMin) / 2
+    }
+    
+    private func shouldIgnore(pixel : Pixel) -> Bool {
+        let lumience = getLuminence(of: pixel)
+        return lumience >= 0.95 || lumience <= 0.05
     }
 }
