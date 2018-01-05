@@ -171,7 +171,7 @@ class VBoxTests: XCTestCase {
         let averageBlue = round(Double(90+(231*2)+(9*3)+231)/7.0)
         let averagePixel = Pixel(red: Int(averageRed), green: Int(averageGreen), blue: Int(averageBlue))
         
-        XCTAssertEqual(subject.average(), averagePixel)
+        XCTAssertEqual(subject.average().pixel, averagePixel)
     }
     
     func testHashValueIsUnique() {

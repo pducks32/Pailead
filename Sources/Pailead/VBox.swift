@@ -265,11 +265,11 @@ public class VBox : Hashable {
     }
     
     
-    /// The statistical average pixel value
+    /// The statistical average swatch value
     ///
     /// - Complexity: O(n)
-    /// - Returns: the average subvalues in each dimension as a pixel
-    public func average() -> Pixel {
+    /// - Returns: the average subvalues in each dimension as a pixel and total count that makes it up
+    public func average() -> Swatch {
         var totalPopulation = 0
         var redSum = 0
         var greenSum = 0
@@ -287,7 +287,8 @@ public class VBox : Hashable {
         let finalGreen = round(Double(greenSum) / Double(totalPopulation))
         let finalBlue = round(Double(blueSum) / Double(totalPopulation))
         
-        return Pixel(red: Pixel.SubValue(finalRed), green: Pixel.SubValue(finalGreen), blue: Pixel.SubValue(finalBlue))
+        let pixel = Pixel(red: Pixel.SubValue(finalRed), green: Pixel.SubValue(finalGreen), blue: Pixel.SubValue(finalBlue))
+        return Swatch(pixel, count: totalPopulation)
     }
     
     /// The dimension with the greatest extent
