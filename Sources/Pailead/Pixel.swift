@@ -7,7 +7,7 @@
 
 import Foundation
 
-/// Represents a 24-bit color in RGB space.
+/// Represents a 24-bit color in RGB space. Each channel is out of 255.
 public struct Pixel : RawRepresentable, Hashable, Equatable {
     public typealias RawValue = Int
     public typealias SubValue = Int
@@ -18,11 +18,11 @@ public struct Pixel : RawRepresentable, Hashable, Equatable {
     public static let digitFullOfOnesUpToSigfigs = SubValue(pow(2, Double(Pixel.sigfigs))) - 1
     
     // - MARK: Channels
-    /// Red channel value
+    /// Red channel value [0-255]
     public let red : SubValue
-    /// Green channel value
+    /// Green channel value [0-255]
     public let green : SubValue
-    /// Blue channel value
+    /// Blue channel value [0-255]
     public let blue : SubValue
     
     // - MARK: Computed
@@ -32,7 +32,7 @@ public struct Pixel : RawRepresentable, Hashable, Equatable {
     public let hashValue : Int
     
     // - MARK: Initializers
-    /// Initialize a new pixel with the given `red`, `blue`, and `green` channels.
+    /// Initialize a new pixel with the given `red`, `blue`, and `green` channels out of 255.
     public init(red : SubValue, green : SubValue, blue : SubValue) {
         self.red = red
         self.green = green
@@ -40,7 +40,6 @@ public struct Pixel : RawRepresentable, Hashable, Equatable {
         self.rawValue = (red << (2*Pixel.sigfigs)) + (green << Pixel.sigfigs) + blue
         self.hashValue = self.rawValue
     }
-    // 28740809174
     
     /// Unmarshal a `rawValue` into it's 3 encoded channels
     public init?(rawValue: RawValue) {
