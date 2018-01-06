@@ -40,7 +40,14 @@ public class Palette {
     }
     
     /// Finds colors for each of the palette's requested swatches
-    private func organizeSwatches() {
+    /// and fill unfound ones with generated ones
+    internal func organizeSwatches() {
+        findSwatches()
+        generateEmptySwatches()
+    }
+    
+    /// Finds colors for each of the palette's requested swatches
+    internal func findSwatches() {
         vibrantSwatch = findColor(targetLuma: 0.5, minLuma: 0.3, maxLuma: 0.7, targetSaturation: 1, minSaturation: 0.35, maxSaturation: 1)
         
         lightVibrantSwatch = findColor(targetLuma: 0.74, minLuma: 0.55, maxLuma: 1, targetSaturation: 1, minSaturation: 0.35, maxSaturation: 1)
@@ -151,6 +158,28 @@ public class Palette {
             sumWeight += entry.1
         }
         return sum / sumWeight
+    }
+    
+    /// If certain swatches couldn't be found then we take
+    /// darker swatches and lighten then and also the
+    /// reverse
+    internal func generateEmptySwatches() {
+        let hslConverter = HSLConverter()
+        if (vibrantSwatch == nil) {
+            if let darkVibrant = darkVibrantSwatch {
+                let hslOfDarkVibrant = hslConverter.hslFor(darkVibrant.pixel)
+                let newPixel = hslConverter.pixelFor(hue: hslOfDarkVibrant.0, saturation: hslOfDarkVibrant.1, lumience: 0.5)
+                vibrantSwatch = Swatch(newPixel, count: 0)
+            }
+        }
+        
+        if (darkVibrantSwatch == nil) {
+            if let vibrant = vibrantSwatch {
+                let hslOfVibrant = hslConverter.hslFor(vibrant.pixel)
+                let newPixel = hslConverter.pixelFor(hue: hslOfVibrant.0, saturation: hslOfVibrant.1, lumience: 0.26)
+                darkVibrantSwatch = Swatch(newPixel, count: 0)
+            }
+        }
     }
     
 }
