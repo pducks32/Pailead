@@ -37,7 +37,10 @@ These are:
 
 ## How it works
 ### Modified Mean Cut Quantization
-That's a big word.
+That's a big word. The image's pixels are grouped and counted.
+Then they are laid out in RGB space. From there the quantizer finds
+RGB boxes that encapsulate the pixels equally. From these boxes the
+average color is generated and then sorted by how common it is in the image.
 
 
 ## Todo
