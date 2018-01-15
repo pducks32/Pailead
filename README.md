@@ -1,17 +1,33 @@
 # Pailead
+[![Version](https://img.shields.io/cocoapods/v/Pailead.svg?style=flat)](http://cocoapods.org/pods/Pailead)
+[![License](https://img.shields.io/cocoapods/l/Pailead.svg?style=flat)](http://cocoapods.org/pods/Pailead)
+[![Platform](https://img.shields.io/cocoapods/p/Pailead.svg?style=flat)](http://cocoapods.org/pods/Pailead)
 
 Pailead works just like the Palette library on Android and other tools like node-vibrant but is
 completely written in Swift and optimized for macOS and iOS.
 
-### Usage
+## Installation
+
+Pailead is available through [CocoaPods](http://cocoapods.org). To install
+it, simply add the following line to your Podfile:
+
+```ruby
+pod "Pailead"
+```
+
+## Usage
+### Extracting Palette
+All images are resized to 1000 pixels to speed up extraction, but don't worry this hasn't been shown to degrade the quality of the palette.
 ```swift
 let image = <#Image#>
 Pailead.extractPalette(from: image) { palette in
 <#Do Something with Palette#>
 }
 ```
-
-The generated palette provides some swatches that represent the image in different ways. These are:
+### Palette Swatches
+The generated palette generates useful swatches to use in your UI or as a loading background perhaps.
+All swatches are actual colors found in the MMCQ calculation though it will generate some if no suitable ones can be found.
+These are:
 - Muted Swatch (middle range luma and low saturation)
 - Dark Muted Swatch (low range luma)
 - Light Muted Swatch (high range luma)
@@ -19,7 +35,12 @@ The generated palette provides some swatches that represent the image in differe
 - Dark Vibrant Swatch (low range luma)
 - Light Vibrant Swatch (high range luma)
 
-### Todo
+## How it works
+### Modified Mean Cut Quantization
+That's a big word.
+
+
+## Todo
 - [x] Switch to swatches
 - [x] Add palette
 - [ ] Paralleize pixel extraction
@@ -28,11 +49,11 @@ The generated palette provides some swatches that represent the image in differe
 - [ ] Optimize processing loop
 - [ ] Add support for other clustering algorithms
 
-### Name
+## Name
 
 If palette is pronounced *pa-let* then Pailead is pronounced *pa-lid*.
 
 The word comes from the Irish word paileád meaning palette which is what this library extracts.
 
-### Author
+## Author
 - @pducks32 (Patrick Metcalfe, git@patrickmetcalfe.com)
