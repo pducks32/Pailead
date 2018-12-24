@@ -84,14 +84,14 @@ public struct Pailead {
                 pixels.append(pixel)
             }
             
-            let paileadThingy = ModifiedMedianCutQuantizer(numberOfSwatches: numberOfColors, pixels: pixels)
+            let quantizer = ModifiedMedianCutQuantizer(numberOfSwatches: numberOfColors, pixels: pixels)
             let blockDelegate = BlockMMCQProcessingDelegate()
             blockDelegate.onDidFinish = { mmcq in
                 let swatches = mmcq.getSwatches()
                 completionHandler(swatches)
             }
-            paileadThingy.delegate = blockDelegate
-            paileadThingy.run()
+            quantizer.delegate = blockDelegate
+            quantizer.run()
         }
     }
 }
