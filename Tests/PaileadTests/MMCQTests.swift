@@ -20,14 +20,14 @@ import XCTest
 
 extension Image {
     public var pixelSize : CGSize {
-        #if os(macOS)
+        #if canImport(AppKit)
             guard let firstRepresentaion = self.representations.first else {
                 fatalError("NSImage#pixelSize - image does not have any representations")
             }
             let height = firstRepresentaion.pixelsHigh
             let width = firstRepresentaion.pixelsWide
             return CGSize(width: width, height: height)
-        #elseif os(iOS)
+        #elseif canImport(UIKit)
             return self.size.applying(CGAffineTransform(scaleX: self.scale, y: self.scale))
         #endif
     }
@@ -54,9 +54,9 @@ public extension Image {
                                 space: colorSpace,
                                 bitmapInfo: CGImageAlphaInfo.noneSkipLast.rawValue)
         
-        #if os(iOS)
+        #if canImport(UIKit)
             guard let cgImage = self.cgImage else { return nil }
-        #elseif os(macOS)
+        #elseif canImport(AppKit)
             guard let cgImage = self.cgImage(forProposedRect: nil, context: nil, hints: nil) else { return nil }
         #endif
         
@@ -158,9 +158,9 @@ class MMCQTests: XCTestCase {
     
     func testRunPerformance() throws {
         let bundle = Bundle(for: MMCQTests.self)
-        #if os(iOS)
+        #if canImport(UIKit)
         let image = try require(UIImage(named: "flower.jpg", in: bundle, compatibleWith: nil))
-        #elseif os(macOS)
+        #elseif canImport(AppKit)
         let image = try require(bundle.image(forResource: NSImage.Name("flower.jpg")))
         #endif
         let scaledImage = Pailead.optimallyResizeImage(image)

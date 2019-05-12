@@ -1,10 +1,10 @@
 import Foundation
 
-#if os(macOS)
+#if canImport(AppKit)
     import AppKit
     public typealias Image = NSImage
     public typealias Color = NSColor
-#elseif os(iOS)
+#elseif canImport(UIKit)
     import UIKit
     public typealias Image = UIImage
     public typealias Color = UIColor

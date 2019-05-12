@@ -27,9 +27,9 @@ class PaletteMakerPictureTests: XCTestCase {
     override func setUp() {
         if !isSetup {
             let bundle = Bundle(for: PaletteMakerPictureTests.self)
-            #if os(iOS)
+            #if canImport(UIKit)
                 image = UIImage(named: "flower.jpg", in: bundle, compatibleWith: nil)!
-            #elseif os(macOS)
+            #elseif canImport(AppKit)
                 image = bundle.image(forResource: NSImage.Name("flower.jpg"))!
             #endif
             
