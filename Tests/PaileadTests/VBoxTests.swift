@@ -179,7 +179,7 @@ class VBoxTests: XCTestCase {
         let betaPixel = Pixel(red: 4, green: 5, blue: 6)
         let first = VBox(min: alphaPixel, max: betaPixel, contents: [:])
         let second = VBox(min: betaPixel, max: alphaPixel, contents: [:])
-        XCTAssertEqual(first, second)
+        XCTAssertNotEqual(first, second)
     }
     
     // Midpoint
