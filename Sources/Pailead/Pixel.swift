@@ -31,6 +31,10 @@ public struct Pixel : RawRepresentable, Hashable, Equatable {
     /// Normally set to `rawValue`
     public let hashValue : Int
     
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(hashValue)
+    }
+    
     // - MARK: Initializers
     /// Initialize a new pixel with the given `red`, `blue`, and `green` channels out of 255.
     public init(red : SubValue, green : SubValue, blue : SubValue) {

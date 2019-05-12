@@ -25,8 +25,9 @@ public class VBox : Hashable {
         }
     }
     
-    public var hashValue: Int {
-        return minPixel.rawValue ^ maxPixel.rawValue
+    public func hash(into hasher : inout Hasher) {
+        hasher.combine(minPixel)
+        hasher.combine(maxPixel)
     }
     
     /// The superposition of **minimum** subvaues in each dimension

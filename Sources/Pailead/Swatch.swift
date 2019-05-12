@@ -46,7 +46,7 @@ extension Swatch : Equatable {
 }
 
 extension Swatch : Hashable {
-    public var hashValue : Int {
-        return pixel.hashValue
+    public func hash(into hasher : inout Hasher) {
+        hasher.combine(pixel)
     }
 }
