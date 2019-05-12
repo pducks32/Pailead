@@ -268,9 +268,14 @@ public class VBox : Hashable {
     
     /// The statistical average swatch value
     ///
+    /// If the box is empty, it will return a black swatch with 0 population.
     /// - Complexity: O(n)
     /// - Returns: the average subvalues in each dimension as a pixel and total count that makes it up
     public func average() -> Swatch {
+        guard !contents.isEmpty else {
+            return Swatch(Pixel(red: 0, green: 0, blue: 0), count: 0)
+        }
+        
         var totalPopulation = 0
         var redSum = 0
         var greenSum = 0

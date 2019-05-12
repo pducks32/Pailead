@@ -174,6 +174,11 @@ class VBoxTests: XCTestCase {
         XCTAssertEqual(subject.average().pixel, averagePixel)
     }
     
+    func testEmptyBox() {
+        let empty = VBox(pixels: [])
+        XCTAssertEqual(empty.average().count, 0, "Swatch population should be empty")
+    }
+    
     func testHashValueIsUnique() {
         let alphaPixel = Pixel(red: 1, green: 2, blue: 3)
         let betaPixel = Pixel(red: 4, green: 5, blue: 6)
