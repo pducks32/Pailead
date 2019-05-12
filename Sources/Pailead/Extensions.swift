@@ -54,10 +54,30 @@ extension Resizeable {
             return img
         }
     }
-#elseif os(iOS)
+#elseif os(watchOS)
+    extension UIImage : Resizeable {
+        public func resizedTo(_ newSize : CGSize) -> Image? {
+            guard let cgImage = self.cgImage else { return nil }
+            let context = CGContext(data: nil,
+                                    width: Int(newSize.width),
+                                    height: Int(newSize.height),
+                                    bitsPerComponent: cgImage.bitsPerComponent,
+                                    bytesPerRow: cgImage.bytesPerRow,
+                                    space: cgImage.colorSpace ?? CGColorSpace(name: CGColorSpace.sRGB)!,
+                                    bitmapInfo: cgImage.bitmapInfo.rawValue)
+            context?.interpolationQuality = .high
+            context?.draw(cgImage, in: CGRect(origin: .zero, size: newSize))
+        
+            guard let scaledImage = context?.makeImage() else { return nil }
+        
+            return Image(cgImage: scaledImage)
+        }
+    }
+#elseif canImport(UIKit)
     
     extension UIImage : Resizeable {
         public func resizedTo(_ newSize : CGSize) -> Image? {
+            
             let imageView = UIImageView(frame: CGRect(origin: .zero, size: newSize))
             imageView.contentMode = .scaleAspectFit
             imageView.image = self
