@@ -34,8 +34,8 @@ extension Image {
 }
 
 public extension Image {
-    public typealias PixelFormat = UInt8
-    public func pixelData() -> [PixelFormat]? {
+    typealias PixelFormat = UInt8
+    func pixelData() -> [PixelFormat]? {
         let componentCount = 4
         let size = self.pixelSize
         let dataSize = size.width * size.height * CGFloat(componentCount)
